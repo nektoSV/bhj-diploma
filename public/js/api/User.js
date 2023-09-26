@@ -1,3 +1,5 @@
+const { response } = require("express");
+
 /**
  * Класс User управляет авторизацией, выходом и
  * регистрацией пользователя из приложения
@@ -8,15 +10,21 @@ class User {
    * Устанавливает текущего пользователя в
    * локальном хранилище.
    * */
-  static setCurrent(user) {
+    static URL = '/user';
 
+  static setCurrent(user) {
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
   }
+}
+  
 
   /**
    * Удаляет информацию об авторизованном
    * пользователе из локального хранилища.
    * */
   static unsetCurrent() {
+    localStorage.removeItem('user');
 
   }
 
@@ -25,6 +33,7 @@ class User {
    * из локального хранилища
    * */
   static current() {
+    return localStorage.user;
 
   }
 
@@ -33,6 +42,21 @@ class User {
    * авторизованном пользователе.
    * */
   static fetch(callback) {
+    createRequest({
+      method: 'GET', 
+      URL: this.URL + '/current', 
+      callback: (err, response) => {
+        if (response && response.user) {
+          this.setCurrent(response.user);
+          callback(err, response);
+          return;
+      }
+
+      this.unsetCurrent();
+        callback(err, response);
+
+      }
+    });
 
   }
 
@@ -53,6 +77,7 @@ class User {
           this.setCurrent(response.user);
         }
         callback(err, response);
+
       }
     });
   }
@@ -64,7 +89,19 @@ class User {
    * User.setCurrent.
    * */
   static register(data, callback) {
+    createRequest({
+      URL: this.URL + '/register',
+      method: 'POST',
+      responseType: 'json',
+      data,
+      callback: (err, response) => {
+        if (response && response.user) {
+          this.setCurrent(response.user);
+      }
+      callback(err, response);
 
+      }
+    });
   }
 
   /**
@@ -72,6 +109,18 @@ class User {
    * выхода необходимо вызвать метод User.unsetCurrent
    * */
   static logout(callback) {
+    createRequest({
+      URL: this.URL + '/logout',
+      method: 'POST',
+      responseType: 'json',
+      data,
+      callback: (err, response) => {
+        if (response && response.user) {
+          this.setCurrent(response.user);
+      }
+      callback(err, response);
 
+      }
+    });
   }
 }
