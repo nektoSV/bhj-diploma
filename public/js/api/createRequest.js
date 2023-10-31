@@ -19,17 +19,17 @@ const createRequest = (options = {}) => {
         if (callback) callback(err);
     }
 
-    if (callback) {
-        try {
-            xhr.onload = function() {
-                if (String(xhr.status).startsWith(2)) { 
-                    callback(xhr.response.error, xhr.response);
-                }
-            }
-        } catch(err) {
-            callback(err);
-        }
-    }
+    // if (callback) {
+    //     try {
+    //         xhr.onload = function() {
+    //             if (String(xhr.status).startsWith(2)) { 
+    //                 callback(xhr.response.error, xhr.response);
+    //             }
+    //         }
+    //     } catch(err) {
+    //         callback(err);
+    //     }
+    // }
 
     function getStringifyData(data) {
         if (data) {

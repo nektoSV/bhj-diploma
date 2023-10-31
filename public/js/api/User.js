@@ -1,4 +1,3 @@
-const { response } = require("express");
 
 /**
  * Класс User управляет авторизацией, выходом и
@@ -6,18 +5,19 @@ const { response } = require("express");
  * Имеет свойство URL, равное '/user'.
  * */
 class User {
+  static URL = '/user';
+
   /**
    * Устанавливает текущего пользователя в
    * локальном хранилище.
    * */
-    static URL = '/user';
 
   static setCurrent(user) {
     if (user) {
       localStorage.setItem('user', JSON.stringify(user));
+    }
   }
-}
-  
+
 
   /**
    * Удаляет информацию об авторизованном
@@ -33,7 +33,7 @@ class User {
    * из локального хранилища
    * */
   static current() {
-    return localStorage.user;
+    return JSON.parse(localStorage.getItem('user'));
 
   }
 
@@ -43,16 +43,16 @@ class User {
    * */
   static fetch(callback) {
     createRequest({
-      method: 'GET', 
-      URL: this.URL + '/current', 
+      method: 'GET',
+      URL: this.URL + '/current',
       callback: (err, response) => {
         if (response && response.user) {
           this.setCurrent(response.user);
           callback(err, response);
           return;
-      }
+        }
 
-      this.unsetCurrent();
+        this.unsetCurrent();
         callback(err, response);
 
       }
@@ -97,8 +97,8 @@ class User {
       callback: (err, response) => {
         if (response && response.user) {
           this.setCurrent(response.user);
-      }
-      callback(err, response);
+        }
+        callback(err, response);
 
       }
     });
@@ -117,8 +117,8 @@ class User {
       callback: (err, response) => {
         if (response && response.user) {
           this.setCurrent(response.user);
-      }
-      callback(err, response);
+        }
+        callback(err, response);
 
       }
     });

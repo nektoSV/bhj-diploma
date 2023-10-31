@@ -11,7 +11,13 @@ class TransactionsWidget {
    * Если переданный элемент не существует,
    * необходимо выкинуть ошибку.
    * */
-  constructor( element ) {
+  constructor(element) {
+    if (!element) {
+      throw new Error('Element not found');
+    }
+
+    this.element = element;
+    this.registerEvents();
 
   }
   /**
@@ -21,6 +27,16 @@ class TransactionsWidget {
    * экземпляра окна
    * */
   registerEvents() {
+    const btnIncome = document.querySelector('.create-income-button');
+    const btnExpense = document.querySelector('.create-expense-button');
+
+    btnIncome.onclick = function () {
+      App.getModal('newIncome').open();
+    }
+
+    btnExpense.onclick = function () {
+      App.getModal('newExpense').open();
+    }
 
   }
 }
