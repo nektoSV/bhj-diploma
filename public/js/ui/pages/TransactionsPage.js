@@ -24,11 +24,8 @@ class TransactionsPage {
    * Вызывает метод render для отрисовки страницы
    * */
   update() {
-    if (this.lastOptions) {
-      this.render(this.lastOptions);
-      return;
-    }
-    this.render();
+    this.render(this.lastOptions);
+
   }
 
 
@@ -72,9 +69,12 @@ class TransactionsPage {
       return;
     }
     const { account_id } = this.lastOptions
-    Account.remove(account_id, User.current(), App.update.bind(App));
+    Account.remove(account_id, User.current(), () => {
+      App.update.bind(App);
+      this.clear();
+    });
+
     this.lastOptions = null;
-    this.clear()
 
   }
 
@@ -87,19 +87,15 @@ class TransactionsPage {
   removeTransaction(id) {
     if (this.lastOptions) {
       let result = confirm('Вы действительно хотите удалить эту транзакцию?');
-      let updateTransaction = (error, response) => {
-        if (response) {
-          App.update();
-        } else {
-          console.log(error);
-        }
-      }
 
       if (result) {
-        Transaction.remove({ id }, updateTransaction);
+        Transaction.remove({ id }, (response) => {
+          if (response) {
+            App.update();
+          }
+        });
       }
     }
-
   }
 
   /**
@@ -195,7 +191,7 @@ class TransactionsPage {
     transactionContainer.innerHTML = '';
     const template = data.data.map((transaction) => this.getTransactionHTML(transaction)).join(' ');
     transactionContainer.insertAdjacentHTML('afterbegin', template);
-    
+
   }
 
 }

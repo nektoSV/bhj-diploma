@@ -9,7 +9,6 @@ class CreateTransactionForm extends AsyncForm {
    * */
   constructor(element) {
     super(element);
-    this.element = element;
     this.renderAccountsList();
   }
 
@@ -33,10 +32,11 @@ class CreateTransactionForm extends AsyncForm {
    * в котором находится форма
    * */
   onSubmit(data) {
-    const typeForm = this.element.closest('.modal').dataset.modalId;
-    Transaction.create(data, App.update.bind(App));
-    this.element.reset()
-    App.modals[typeForm].close();
+    Transaction.create(data, () => {
+      this.element.reset();
+      (new Modal(this.element.closest('.modal'))).close();
+      App.update();
+    });
 
   }
 }

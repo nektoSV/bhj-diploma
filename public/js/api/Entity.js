@@ -4,7 +4,7 @@
  * Имеет свойство URL, равно пустой строке.
  * */
 class Entity {
-  static URL = '';
+  static url = '';
   /**
    * Запрашивает с сервера список данных.
    * Это могут быть счета или доходы/расходы
@@ -13,7 +13,7 @@ class Entity {
   static list(data, callback) {
     createRequest ({
       data,
-      URL: this.URL,
+      url: this.url,
       method: 'GET',
       callback
     });
@@ -28,7 +28,7 @@ class Entity {
   static create(data, callback) {
     createRequest ({
       data,
-      URL: this.URL,
+      url: this.url,
       method: 'PUT',
       callback
     });
@@ -42,7 +42,7 @@ class Entity {
   static remove(data, callback ) {
     createRequest ({
       data,
-      URL: this.URL,
+      url: this.url,
       method: 'DELETE',
       callback
     });

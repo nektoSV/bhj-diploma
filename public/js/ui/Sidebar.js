@@ -18,18 +18,15 @@ class Sidebar {
    * при нажатии на кнопку .sidebar-toggle
    * */
   static initToggleButton() {
-    let open = body.className.indexOf('sidebar-open');
+    document.querySelector('.sidebar-toggle').addEventListener('click', (e) => {
 
-    if (open < 0) {
-      body.classList.add('sidebar-open');
-      body.classList.remove('sidebar-collapse');
-    } else {
-      body.classList.remove('sidebar-open');
-      body.classList.add('sidebar-collapse');
-    }
+      e.preventDefault();
+      document.body.classList.toggle('sidebar-open');
+      document.body.classList.toggle('sidebar-collapse');
+
+    });
+
   }
-
-
 
   /**
    * При нажатии на кнопку входа, показывает окно входа
