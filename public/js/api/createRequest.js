@@ -3,51 +3,41 @@
  * на сервер.
  * */
 const createRequest = (options = {}) => {
-    let xhr = new XMLHttpRequest();
-    const { method, url, data, callback } = options;
-    xhr.responseType = "json";
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
+    xhr.withCredentials = true;
+    xhr.responseType = 'json';
+
+    if (options.method === "GET") {
+        options.url += '?';
+
+        for (let key in options.data) {
+            options.url += `${key}=${options.data[key]}&`;
+        }
+    } else {
+        for (let key in options.data) {
+            formData.append(key, options.data[key]);
+
+
+        }
+
+    }
 
     try {
-        if (method === 'GET') {
-            xhr.open(method, url + getStringifyData(data));
-            xhr.send();
-        } else {
-            xhr.open(method, url);
-            xhr.send(getFormData(data));
+        xhr.open(options.method, options.url);
+        xhr.send(formData);
+
+    }
+
+    catch (err) {
+        options.callback(err);
+        console.log(err)
+
+    }
+    xhr.addEventListener("readystatechange", () => {
+
+        if (xhr.readyState === xhr.DONE && xhr.status === 200) {
+            options.callback(null, xhr.response);
         }
-    } catch (err) {
-        if (callback) callback(err);
-    }
-
-
-    function getStringifyData(data) {
-        if (!data) {
-            return '';
-        }
-
-        let strData = '';
-        let index = 0;
-
-        for (let key in data) {
-            strData += (index > 0 ? '&' : '?') + key + '=' + data[key];
-        }
-
-        return strData;
-    }
-}
-
-
-function getFormData(data) {
-    if (!data) {
-        return '';
-    }
-    const formData = new FormData();
-
-    for (let key in data) {
-        formData.append(key, data[key]);
-    }
-    return formData;
-}
-
-
-
+    });
+};

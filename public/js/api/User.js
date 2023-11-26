@@ -13,10 +13,9 @@ class User {
    * */
 
   static setCurrent(user) {
-    if (user) {
       localStorage.setItem('user', JSON.stringify(user));
     }
-  }
+  
 
 
   /**
