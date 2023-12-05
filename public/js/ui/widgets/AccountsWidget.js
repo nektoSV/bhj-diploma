@@ -15,7 +15,7 @@ class AccountsWidget {
    * */
   constructor(element) {
     if (!element) {
-      throw new Error('Элемент должен быть передан!');
+      throw new Error('The element should have been transferred');
     }
     this.element = element;
     this.registerEvents();
@@ -48,12 +48,10 @@ class AccountsWidget {
    * метода renderItem()
    * */
   update() {
-    const isCurrentUser = User.current();
-    if (!isCurrentUser) {
-      return;
-    }
-
-    Account.list(isCurrentUser, this.renderItem.bind(this));
+    Account.list(User.current(), response => {
+      this.clear();
+      this.renderItem(response.data);
+    });
 
   }
 
@@ -97,8 +95,8 @@ class AccountsWidget {
    * */
   getAccountHTML(item) {
     return `
-    <li class="account" data-account-Id="${item.id}">
-    <a href="#">
+    <li class='account' data-id='${item.id}'>
+    <a href='#'>
       <span>${item.name}</span> /
       <span>${item.sum} ₽</span>
     </a>
@@ -113,7 +111,14 @@ class AccountsWidget {
    * и добавляет его внутрь элемента виджета
    * */
   renderItem(data) {
-    this.element.insertAdjacentHTML('beforeend', this.getAccountHTML(data));
+    data.forEach(item => {
+      const {
+        name, id, sum
+      } = item;
+
+      this.element.insertAdjacentHTML('beforeend', this.getAccountHTML({ name, id, sum }));
+
+    });
 
   }
 }

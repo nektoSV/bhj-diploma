@@ -112,7 +112,7 @@ class User {
       url: this.url + '/logout',
       method: 'POST',
       responseType: 'json',
-      data,
+      data: data,
       callback: (err, response) => {
         if (response && response.user) {
           this.setCurrent(response.user);

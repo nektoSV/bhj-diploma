@@ -64,7 +64,7 @@ class TransactionsPage {
     if (!this.lastOptions) {
       return;
     }
-    const isConfirm = confirm('Вы действительно хотите удалить счет?');
+    const isConfirm = confirm('Do you want to delete your account?');
     if (!isConfirm) {
       return;
     }
@@ -86,7 +86,7 @@ class TransactionsPage {
    * */
   removeTransaction(id) {
     if (this.lastOptions) {
-      let result = confirm('Вы действительно хотите удалить эту транзакцию?');
+      let result = confirm('Do you want to delete this transaction');
 
       if (result) {
         Transaction.remove({ id }, (response) => {

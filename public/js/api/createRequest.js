@@ -5,7 +5,6 @@
 const createRequest = (options = {}) => {
     const xhr = new XMLHttpRequest();
     const formData = new FormData();
-    xhr.withCredentials = true;
     xhr.responseType = 'json';
 
     if (options.method === "GET") {
@@ -34,10 +33,23 @@ const createRequest = (options = {}) => {
         console.log(err)
 
     }
-    xhr.addEventListener("readystatechange", () => {
 
-        if (xhr.readyState === xhr.DONE && xhr.status === 200) {
-            options.callback(null, xhr.response);
-        }
+
+    xhr.addEventListener('load', () => {
+        options.callback(null, xhr.response);
+
     });
+
 };
+    
+    
+    
+
+
+
+
+
+
+
+
+
